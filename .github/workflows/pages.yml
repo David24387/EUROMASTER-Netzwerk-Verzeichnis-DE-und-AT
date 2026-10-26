@@ -24,6 +24,7 @@ jobs:
       - name: Test data mapping
         run: |
           node tests/data.cjs
+          node tests/selection.cjs
           node --check app.js
       - uses: actions/configure-pages@v5
         with:
@@ -31,7 +32,7 @@ jobs:
       - name: Prepare website
         run: |
           mkdir public
-          cp index.html app.js data.js style.css countries.geojson snapshot.json public/
+          cp index.html app.js data.js selection.js style.css countries.geojson snapshot.json public/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public

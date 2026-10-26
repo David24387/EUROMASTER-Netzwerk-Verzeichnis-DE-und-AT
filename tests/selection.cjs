@@ -1,0 +1,3 @@
+const assert=require('node:assert/strict'),S=require('../selection.js');
+const row={network:'EFR',rl:'RL1'},defs=[{enabled:true,key:r=>r.network,items:[{key:'EFR',checked:true}]},{enabled:true,key:r=>r.rl,items:[{key:'RL1',checked:true}]}];
+assert(S.selectStyle(row,defs));defs[0].items[0].checked=false;assert.equal(S.selectStyle(row,defs),null,'Other layer must not resurrect excluded network');defs[0].items[0].checked=true;defs[1].items[0].checked=false;assert.equal(S.selectStyle(row,defs),null,'Excluded RL must remain hidden');defs[1].enabled=false;assert(S.selectStyle(row,defs));defs[0].enabled=false;assert.equal(S.selectStyle(row,defs),null);console.log('PASS: combined exclusions, inactive layers and no active layers');
