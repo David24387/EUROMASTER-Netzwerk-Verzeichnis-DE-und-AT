@@ -1,0 +1,6 @@
+(function(root){
+const norm=s=>String(s||'').trim();
+const number=s=>Number(norm(s).replace(',','.'));
+function parse(rows){let country='DE',header=[],out=[];for(const row of rows){if(norm(row[0])==='KST'){header=row;country=norm(row[1])==='Netzwerk'?'AT':'DE';continue}if(!header.length||row.every(x=>!norm(x)))continue;const get=(...names)=>{for(const n of names){const i=header.indexOf(n);if(i>=0)return norm(row[i])}return ''};const name=get('Gesellschaft');if(!name)continue;const raw=get('Netz','Netzwerk').toUpperCase();const network=raw.includes('ERM')?'ERM':raw.includes('FRA')||raw.includes('FRANCHISE')?'FRA':raw.includes('EFR')?'EFR':raw.includes('PLP')?'PLP':raw;const lat=number(get('Lat.','Lat./Breitengard')),lng=number(get('Long.','Long./Längengrad'));const valid=lat>=46&&lat<=56&&lng>=5&&lng<=18;const bu=country==='DE'?get('BU'):get('Vertrag');out.push({id:get('KST')||country+'-'+out.length,country,network,name,street:get('Straße','Strasse'),zip:get('PLZ'),city:get('Ort'),lat:valid?lat:null,lng:valid?lng:null,bu,region:country==='DE'?get('Region'):'',rl:country==='DE'?get('RL'):'',consultant:country==='AT'?get('Consultant'):'',bl:country==='DE'?get('BL'):'',status:get('Status')})}return out}
+root.NetworkData={parse};if(typeof module!=='undefined')module.exports=root.NetworkData;
+})(typeof window==='undefined'?globalThis:window);
